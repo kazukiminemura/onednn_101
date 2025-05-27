@@ -29,7 +29,7 @@ int main() {
     dnnl::engine eng = dnnl::sycl_interop::make_engine(queue.get_device(), queue.get_context());
     dnnl::stream s = dnnl::sycl_interop::make_stream(eng, queue);
 
-    const int M = 512, K = 512, N = 512;
+    const int M = 4096, K = 10240, N = 8192;
     const int LOOP = 10000; // ここを必要な回数に
 
     for (int iter = 0; iter < LOOP; ++iter) {
@@ -69,10 +69,10 @@ int main() {
         sycl::free(C, queue);
 
         // 進捗表示
-        if (iter % 10 == 0) {
-            std::cout << "Iteration " << iter << " done" << std::endl;
-            // sleep(1); // 必要なら
-        }
+        //if (iter % 10 == 0) {
+        //    std::cout << "Iteration " << iter << " done" << std::endl;
+        //    // sleep(1); // 必要なら
+        //}
     }
 
     return 0;
