@@ -67,12 +67,6 @@ int main() {
         sycl::free(A, queue);
         sycl::free(B, queue);
         sycl::free(C, queue);
-
-        // 進捗表示
-        //if (iter % 10 == 0) {
-        //    std::cout << "Iteration " << iter << " done" << std::endl;
-        //    // sleep(1); // 必要なら
-        //}
     }
 
     return 0;
