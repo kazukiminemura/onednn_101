@@ -1,30 +1,13 @@
 #include <sycl/sycl.hpp>
 #include <oneapi/dnnl/dnnl.hpp>
 #include <oneapi/dnnl/dnnl_sycl.hpp>
-#include <level_zero/ze_api.h>
 #include <iostream>
 #include <vector>
 #include <unistd.h> // sleep用
 
-size_t get_level_zero_total_memory(const sycl::queue& queue) {
-    auto dev = queue.get_device();
-    ze_device_handle_t ze_dev = sycl::get_native<sycl::backend::ext_oneapi_level_zero>(dev);
-    zeInit(0);
-    uint32_t mem_count = 0;
-    zeDeviceGetMemoryProperties(ze_dev, &mem_count, nullptr);
-    std::vector<ze_device_memory_properties_t> mem_props(mem_count);
-    zeDeviceGetMemoryProperties(ze_dev, &mem_count, mem_props.data());
-    size_t total = 0;
-    for (uint32_t i = 0; i < mem_count; ++i) {
-        total += mem_props[i].totalSize;
-    }
-    return total;
-}
 
 int main() {
     sycl::queue queue(sycl::gpu_selector_v);
-    size_t total_mem = get_level_zero_total_memory(queue);
-    std::cout << "Level Zero GPU total memory: " << (total_mem / (1024 * 1024)) << " MB" << std::endl;
 
     dnnl::engine eng = dnnl::sycl_interop::make_engine(queue.get_device(), queue.get_context());
     dnnl::stream s = dnnl::sycl_interop::make_stream(eng, queue);
